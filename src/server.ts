@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import './config/database.js';
 
+import tenantRoutes from './routes/tenantRoutes.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -14,6 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet()); // Secures HTTP headers
 app.use(cors()); // Allows cross-origin requests
 app.use(express.json()); // Parses incoming JSON payloads
+
+// Register API Routes
+app.use('/api/tenants', tenantRoutes);
 
 // Health Check Endpoint (To verify the server is alive)
 app.get('/health', (req: Request, res: Response) => {
