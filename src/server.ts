@@ -8,6 +8,7 @@ import './config/database.js';
 import tenantRoutes from './routes/tenantRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
+import { setupSwagger } from './config/swagger.js';
 
 // Load environment variables
 dotenv.config();
@@ -34,7 +35,11 @@ app.get('/health', (req: Request, res: Response) => {
     });
 });
 
+// Initialize Swagger Documentation UI
+setupSwagger(app);
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`🚀 API Gateway is running on http://localhost:${PORT}`);
+    console.log(`📚 Swagger Docs available at http://localhost:${PORT}/api-docs`);
 });
