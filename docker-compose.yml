@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # 1. The Primary Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ticketing_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: engine_admin
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: ticketing_engine
+    ports:
+      - "5433:5432"
+    volumes:
+      # This ensures your data isn't deleted if the container stops
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ticketing_network
+
+  # 2. The Database GUI
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ticketing_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@engine.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - ticketing_network
+
+# Define the shared network so containers can talk to each other
+networks:
+  ticketing_network:
+    driver: bridge
+
+# Define the persistent storage volume
+volumes:
+  postgres_data:
