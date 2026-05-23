@@ -50,3 +50,36 @@ export const requireSecretKey = async (req: Request, res: Response, next: NextFu
         res.status(500).json({ error: 'Internal server error during authentication' });
     }
 };
+
+// Public Middleware (For frontend applications)
+export const requirePublishableKey = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        // Publishable keys are usually sent in a custom header, not as a Bearer token
+        const pubKey = req.headers['x-publishable-key'] as string;
+
+        if (!pubKey || !pubKey.startsWith('pk_')) {
+            res.status(401).json({ error: 'Missing or invalid x-publishable-key header.' });
+            return;
+        }
+
+        // Fast indexed lookup for the tenant
+        const query = `SELECT id, name FROM tenants WHERE publishable_key = $1;`;
+        const result = await db.query(query, [pubKey]);
+
+        if (result.rows.length === 0) {
+            res.status(401).json({ error: 'Invalid Publishable Key' });
+            return;
+        }
+
+        // Attach tenant to request just like the secret key middleware
+        req.tenant = {
+            id: result.rows[0].id,
+            name: result.rows[0].name
+        };
+
+        next();
+    } catch (error) {
+        console.error('Public Auth Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

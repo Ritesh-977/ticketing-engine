@@ -4,7 +4,10 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import './config/database.js';
 
+// Import routes
 import tenantRoutes from './routes/tenantRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -19,6 +22,8 @@ app.use(express.json()); // Parses incoming JSON payloads
 
 // Register API Routes
 app.use('/api/tenants', tenantRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/public', publicRoutes);
 
 // Health Check Endpoint (To verify the server is alive)
 app.get('/health', (req: Request, res: Response) => {
