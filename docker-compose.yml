@@ -24,6 +24,19 @@ services:
       - "6379:6379"
     networks:
       - ticketing_network
+      
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: ticketing_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: engine_admin
+      RABBITMQ_DEFAULT_PASS: supersecretpassword
+    ports:
+      - "5672:5672"   # The actual port Node.js uses to send messages
+      - "15672:15672" # The Web UI Dashboard port
+    networks:
+      - ticketing_network
 
 networks:
   ticketing_network:

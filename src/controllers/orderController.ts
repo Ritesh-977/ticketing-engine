@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import { db } from '../config/database.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
+import { mq } from '../config/rabbitmq.js';
 
 export const createOrder = async (req: Request, res: Response): Promise<void> => {
     const { eventId } = req.params;
@@ -67,6 +68,15 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
 
         // 7. Commit the Transaction (Save everything permanently)
         await db.query('COMMIT');
+
+        // 7.5 Publish background task to RabbitMQ
+        // We do this AFTER the commit so we don't send emails for failed orders
+        await mq.publish('order_notifications', {
+            orderId: orderResult.rows[0].id,
+            eventId: eventId,
+            tenantId: tenantId,
+            timestamp: new Date().toISOString()
+        });
 
         res.status(201).json({
             message: 'Order successful!',
