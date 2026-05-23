@@ -2,13 +2,16 @@ import express, { type Application, type Request, type Response } from 'express'
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+
 import './config/database.js';
+import './config/redis.js';
 
 // Import routes
 import tenantRoutes from './routes/tenantRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
 import { setupSwagger } from './config/swagger.js';
+
 
 // Load environment variables
 dotenv.config();

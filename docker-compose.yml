@@ -16,6 +16,15 @@ services:
     networks:
       - ticketing_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: ticketing_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - ticketing_network
+
 networks:
   ticketing_network:
     driver: bridge
