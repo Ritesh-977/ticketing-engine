@@ -10,6 +10,7 @@ import './config/redis.js';
 import tenantRoutes from './routes/tenantRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { setupSwagger } from './config/swagger.js';
 import { mq } from './config/rabbitmq.js';
 import { startNotificationWorker } from './workers/notificationWorker.js';
@@ -30,6 +31,7 @@ app.use(express.json()); // Parses incoming JSON payloads
 app.use('/api/tenants', tenantRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health Check Endpoint (To verify the server is alive)
 app.get('/health', (req: Request, res: Response) => {

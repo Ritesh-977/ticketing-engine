@@ -1,6 +1,6 @@
 import express from 'express';
 import { createEvent, getEvents } from '../controllers/eventController.js';
-import { requireSecretKey } from '../middleware/authMiddleware.js';
+import { requireSecretKey } from '../middleware/auth.js';
 
 const router = express.Router();
 

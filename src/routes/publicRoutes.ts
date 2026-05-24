@@ -1,7 +1,7 @@
 import express from 'express';
 import { getEventInventory } from '../controllers/eventController.js';
 import { createOrder } from '../controllers/orderController.js';
-import { requirePublishableKey } from '../middleware/authMiddleware.js';
+import { requirePublishableKey } from '../middleware/auth.js';
 
 const router = express.Router();
 
